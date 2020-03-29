@@ -1,0 +1,90 @@
+{% extends "vm/template.html" %}
+{% load static %}
+{% block title %}Choisis ta recette{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12" id="flavours_form">
+        {% if flavours_list %}
+            <form role="form"  enctype="multipart/form-data" data-action="{% url 'vm:api_save_order' %}" method="post">
+                {% csrf_token %}
+                {% for flavour in flavours_list %}
+                    {% if flavour.quantity > 0 %}
+                        <input class="form-control" name="id" type="hidden" value="{{flavour.id}}">
+                        <div class="form-group row flavourLine">
+                            <div class="col-sm-4">
+                                <label for="quantity{{flavour.id}}"><img class="flavourPicture" src="{% static 'img/' %}{{flavour.picture_name}}"><label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="quantity{{flavour.id}}">{{ flavour.name }}</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="quantity{{flavour.id}}">{{ flavour.quantity }}/{{ flavour.capacity }}</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <input class="form-control" type="number" id="quantity{{flavour.id}}" name="quantity" placeholder="0" min="0" max="{{ flavour.quantity }}">
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <br>
+                <div class="form-group row">
+                <div class="col-sm-12">
+                  <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-primary" type="submit">Commander</button>
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+    <div class="col-md-6" id="order_container">
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script type="text/javascript">
+    $('form').submit(function() {
+        event.preventDefault();
+
+        const form = $(this);
+        const url = form.attr('data-action');
+
+        const qtyDiv = $('[name="quantity"]')
+        let isEmpty = true;
+        for (i in qtyDiv) {
+            if(qtyDiv[i].value && !isNaN(qtyDiv[i].value)) {
+                isEmpty = false;
+                break;
+            }
+        }
+        if(isEmpty) {
+            alert("Choissisez une boule minimum");
+            return;
+        }
+
+        //const params = new FormData(form.get(0));
+        const params = form.serialize();
+        $.ajax({
+            method:'POST',
+            dataType: 'json',
+            url: url,
+            data: params,
+            success: function (data) {
+                $('#flavours_form').html(data.order)
+            },
+            error: function () {
+                alert("Problème lors de la création de la commande");
+            }
+        })
+    });
+
+</script>
+{% endblock %}

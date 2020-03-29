@@ -1,0 +1,7 @@
+{% load static %}
+{% if flavour %}
+    <td><img class="flavourPicture" src="{% static 'img/' %}{{flavour.picture_name}}"></td>
+    <td>{{ flavour.name }}</td>
+    <td class="capacity">{% include 'include/capacity.html' %}</td>
+    <td><button class="btn btn-primary fill_button" data-href="{% url 'vm:api_fill_flavour' flavour.id  %}">Remplir!</button></td>
+{% endif %}

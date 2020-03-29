@@ -1,0 +1,52 @@
+{% extends "vm/template.html" %}
+{% load static %}
+{% block title %}
+    - Administration{{ block.super }}
+{% endblock %}
+
+{% block content %}
+{% if flavours %}
+<div class="table-responsive"></div>
+    <table class="tableContentTable">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Quantité</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="tableContent">
+            {% for flavour in flavours %}
+                <tr class="flavourLine" data-title="flavour{{ flavour.id }}">
+                {% include 'include/flavour_container.html' %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No flavour are available.</p>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    _setTimeoutAlert = null;
+    $('.fill_button').click(function (evt) {
+        evt.preventDefault();
+        const btn = $(this);
+        const url = btn.attr('data-href');
+        $.ajax({
+            method: 'GET',
+            dataType: 'json',
+            url: url,
+            success : function (data) {
+                $('[data-title="flavour'+data.flavour_id+'"]').find('.capacity').html(data.flavour)
+            },
+            error : function() {
+                alert("Une erreur est survenu, veuillez réessayer plus tard.");
+            }
+        })
+    });
+</script>
+{% endblock %}

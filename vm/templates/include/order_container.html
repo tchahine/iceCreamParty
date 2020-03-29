@@ -1,0 +1,15 @@
+{% load static %}
+{% if order %}
+    <div>Votre commande :</div>
+
+    {% for picture_name in flavours %}
+        <img class="flavourPicture" src="{% static 'img/' %}{{picture_name}}">
+    {% endfor %}
+    <div>Code de la commande : {{ order.code }}</div>
+    <div>Date : {{ order.date }}</div>
+    <div>Prix : {{ order.tag_value }}</div>
+
+    <a href="{% url 'vm:order' %}">Refaire une commande</a>
+{% else %}
+    <div>Pas de commande avec ce code</div>
+{% endif %}

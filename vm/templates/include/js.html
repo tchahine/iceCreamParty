@@ -1,0 +1,19 @@
+{% load static %}
+
+<!-- Custom CSS -->
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}" ></script>
+<script type="text/javascript">
+    _setTimeoutAlert = null;
+    function alert(msg) {
+        $('#alert').addClass("alert-danger");
+        $('#alert').text(msg);
+        $('#alert').addClass('show');
+        clearTimeout(_setTimeoutAlert);
+        _setTimeoutAlert = setTimeout(function() {
+            $('#alert').removeClass('show');
+            $('#alert').removeClass('alert-danger');
+            $('#alert').text('');
+        }, 5000);
+    }
+</script>

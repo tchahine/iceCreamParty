@@ -1,0 +1,63 @@
+{% extends "vm/template.html" %}
+{% load static %}
+{% block title %}Ta commande{{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+{% if orders_list %}
+    {% for order in orders_list %}
+    <div class="row" id="orders">
+        <div class="col-md-12">
+            {{order.code}}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div>No orders</div>
+{% endif %}
+
+<div class="row" id="search">
+    <div class="col-md-12">
+        <input type="text"
+               class="form-control"
+               id="search_input"
+               name="search_input"
+               placeholder="Taper votre code ici"
+               maxlength="8"
+        >
+        <button class="btn btn-primary search_button" data-href="{% url 'vm:api_search_order' 'codeCODE' %}">Rechercher</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12" id="order_container">
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+_setTimeoutAlert = null;
+    $('.search_button').click(function (evt) {
+        evt.preventDefault();
+        const btn = $(this);
+        const url = btn.attr('data-href');
+        const val = $('#search_input').val()
+        if (val) {
+            const finalUrl = url.replace("codeCODE",val)
+            $.ajax({
+                method:'GET',
+                dataType: 'json',
+                url: finalUrl,
+                success: function (data) {
+                    $('#order_container').html(data.order)
+                },
+                error: function () {
+                    $('#order_container').html("<div>Pas de commande avec ce code</div>")
+                }
+            })
+        }
+    })
+</script>
+{% endblock %}

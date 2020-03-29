@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+  <head>
+    <title>Ice Cream by Nalo {% block title %}{% endblock %}</title>
+
+    {% include 'include/css.html' %}
+    {% block extra_css %}{% endblock extra_css %}
+
+    {% include 'include/js.html' %}
+  </head>
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'vm:order' %}"><img class="nav-logo" src="/static/img/logo-nalo.svg" ></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item {% if request.resolver_match.view_name == 'vm:order' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'vm:order' %}">Choisis ta glace <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.view_name == 'vm:search_order' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'vm:search_order' %}">Commandes</a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.view_name == 'vm:administration' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'vm:administration' %}">Administration</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mainContainer">
+      <div class="row">
+          <div class="col-md-12">
+            <div id="alert" class="alert fixed-top text-center fade" role="alert"></div>
+        </div>
+      </div>
+      {% block content %}{% endblock %}
+      <div class="row">
+          <div class="col-md-12">
+            <div id="loading" class=" text-center" style="margin-bottom: 16px; display:none;">
+                  <img src="{% static 'img/loading.gif' %}">
+            </div>
+        </div>
+      </div>
+    </div>
+
+    {% block extra_js %}{% endblock extra_js %}
+  </body>
+</html>
